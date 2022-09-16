@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "c1a36904-81bf-416c-bde3-6beb54914050",
+		"name": "ReqRes.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//сохраняем значения переменных id и token в environment\r",
+							"pm.environment.set(\"id\", \"4\");\r",
+							"pm.environment.set(\"token\",\"QpwL5tke4Pnpja7X4\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlReq}}/api/register",
+					"host": [
+						"{{urlReq}}"
+					],
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//сохраняем значения переменной email в environment\r",
+							"pm.environment.set(\"email\", \"eve.holt@reqres.in\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlReq}}/api/users/4",
+					"host": [
+						"{{urlReq}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User Succesful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var tokenRes = responseBody.token; \r",
+							"var tokenReq = pm.environment.get(\"token\");\r",
+							"\r",
+							"pm.test(\"Статус код ответа равен 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"token из ответа равен token из регистрации\", function () {\r",
+							"    pm.expect(tokenRes).to.deep.equal(tokenReq);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlReq}}/api/login",
+					"host": [
+						"{{urlReq}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User Unsuccesful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var error = responseBody.error; \r",
+							"\r",
+							"pm.test(\"Статус код ответа равен 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Сообщение об ошибке содержит текст Missing password\", function () {\r",
+							"    pm.expect(error).to.deep.equal(\"Missing password\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"peter@klaven\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlReq}}/api/login",
+					"host": [
+						"{{urlReq}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get List Of Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"//определяем переменную page, равную переменной page из запроса\r",
+							"var pageReq = 1; \r",
+							"//переменная page(number) из ответа\r",
+							"var pageRes = responseBody.page; \r",
+							"//определяем переменные для имени и фамилии \r",
+							"var firstNameRes = responseBody.data[3].first_name;\r",
+							"var lastNameRes = responseBody.data[3].last_name;\r",
+							"\r",
+							"pm.test(\"Статус код ответа равен 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Сравнение page из запроса и ответа\", function () {\r",
+							"    pm.expect(pageReq).to.deep.equal(pageRes);\r",
+							"});\r",
+							"\r",
+							"//проверка, что массив значений data приходит не пустой \r",
+							"if (responseBody.data && responseBody.data.length>0) {\r",
+							"    pm.test(\"Проверка, что массив data не пустой и содержит значения\", function () {\r",
+							"    pm.expect(responseBody.data).is.not.oneOf([null, undefined]);});\r",
+							"    }\r",
+							"\r",
+							"//проверка, что четвертый элемент в массиве data содержит Eve Holt\r",
+							"pm.test(\"Массив data содержит имя Eve\", function () {\r",
+							"    pm.expect(firstNameRes).to.deep.equal(\"Eve\");\r",
+							"});\r",
+							"pm.test(\"Массив data содержит фамилию Holt\", function () {\r",
+							"    pm.expect(lastNameRes).to.deep.equal(\"Holt\");\r",
+							"});\r",
+							"\r",
+							"//удаляем переменные из environment\r",
+							"pm.environment.unset(\"id\");\r",
+							"pm.environment.unset(\"token\");\r",
+							"pm.environment.unset(\"email\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlReq}}/api/users?page=1",
+					"host": [
+						"{{urlReq}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
