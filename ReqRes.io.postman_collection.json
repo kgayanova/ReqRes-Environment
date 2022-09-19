@@ -52,7 +52,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"//save the value of variables email в environment\r",
+							"//save the value of variables email in environment\r",
 							"pm.environment.set(\"email\", \"eve.holt@reqres.in\");"
 						],
 						"type": "text/javascript"
